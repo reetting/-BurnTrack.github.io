@@ -112,12 +112,14 @@
                 </a>
                 
                 <!-- Desktop Menu -->
-                <div class="hidden md:flex space-x-8">
+                <div class="hidden md:flex space-x-8 items-center">
                     <a href="#problem" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Problème</a>
                     <a href="#solution" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Solution</a>
-                    <a href="#roadmap" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Roadmap</a>
                     <a href="#team" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Équipe</a>
-                    <a href="#contact" class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-sm font-bold transition-colors shadow-lg shadow-red-600/20">Contact</a>
+                    <div class="h-4 w-px bg-gray-700"></div>
+                    <a href="history.html" class="text-gray-300 hover:text-white transition-colors text-sm font-medium flex items-center gap-1"><i data-lucide="archive" class="w-4 h-4"></i> Historique</a>
+                    <a href="simulation.html" class="text-gray-300 hover:text-white transition-colors text-sm font-medium flex items-center gap-1"><i data-lucide="activity" class="w-4 h-4"></i> Simulations</a>
+                    <a href="login.html" class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-sm font-bold transition-colors shadow-lg shadow-red-600/20 flex items-center gap-1"><i data-lucide="lock" class="w-4 h-4"></i> Admin</a>
                 </div>
             </div>
         </div>
@@ -157,9 +159,7 @@
 
             <div class="reveal delay-400 w-full flex justify-center">
                 <p class="mt-6 max-w-3xl text-gray-400 text-sm md:text-base border-l-2 border-red-600 pl-4 text-left italic bg-white/5 p-4 rounded-r-lg backdrop-blur-sm">
-                    "En combinant robotique mobile et IA, notre solution a pour objectif  de créer un "Jumeau Numérique" de la zone forestière surveillée, qui ne
-soit pas une copie statique, mais une réplique vivante, mise à jour en permanence par les
-données du terrain physique,pour ensuite entrainer une Ia sur ce jumeau numerique pour faire de la prediction afin d'agir dans le "Golden Time" ,protégeant ainsi durablement les écosystèmes et les populations."
+                    "En combinant robotique mobile et une IA de type réseau de neurones couplée à un automate cellulaire, notre solution crée un 'Jumeau Numérique' de la zone forestière. Mise à jour en permanence par les données satellites de la NASA et du terrain physique, l'IA corrige le modèle classique de Rothermel pour atteindre une précision de 98%, afin d'agir dans le 'Golden Time'."
                 </p>
             </div>
 
@@ -259,19 +259,19 @@ et de la simulation rapide au sein d’une boucle de rétroaction cyber-physique
                     <ul class="space-y-4">
                         <li class="reveal delay-300 flex items-center text-gray-300">
                             <i data-lucide="shield-check" class="text-red-500 mr-3 w-5 h-5 flex-shrink-0"></i>
-                            Cartographie autonome par robotique mobile p
+                            Cartographie autonome par robotique mobile
                         </li>
                         <li class="reveal delay-400 flex items-center text-gray-300">
                             <i data-lucide="shield-check" class="text-red-500 mr-3 w-5 h-5 flex-shrink-0"></i>
-                           Simulation de propagation de feu avancée sur le jumeau numerique 
+                           Automate Cellulaire couplé au modèle physique de Rothermel
                         </li>
                         <li class="reveal delay-500 flex items-center text-gray-300">
                             <i data-lucide="shield-check" class="text-red-500 mr-3 w-5 h-5 flex-shrink-0"></i>
-                            Optimisation par IA des plans de brûlage
+                            Correction dynamique par IA (MLP) sur des milliers de données réelles (NASA)
                         </li>
                         <li class="reveal delay-600 flex items-center text-gray-300">
                             <i data-lucide="shield-check" class="text-red-500 mr-3 w-5 h-5 flex-shrink-0"></i>
-                            Aide à la décision opérationnelle
+                            Précision R² exceptionnelle de 0.98 pour l'aide à la décision
                         </li>
                     </ul>
                 </div>
@@ -576,9 +576,10 @@ et de la simulation rapide au sein d’une boucle de rétroaction cyber-physique
                 <div>
                     <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Navigation</h4>
                     <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="#hero" class="hover:text-red-500 transition-colors">Accueil</a></li>
-                        <li><a href="#solution" class="hover:text-red-500 transition-colors">Solution</a></li>
-                        <li><a href="#team" class="hover:text-red-500 transition-colors">Équipe</a></li>
+                        <li><a href="index.html#hero" class="hover:text-red-500 transition-colors">Accueil</a></li>
+                        <li><a href="simulation.html" class="hover:text-red-500 transition-colors text-white font-medium">Visualisation (Live)</a></li>
+                        <li><a href="history.html" class="hover:text-red-500 transition-colors text-white font-medium">Archives</a></li>
+                        <li><a href="login.html" class="hover:text-red-500 transition-colors text-white font-medium">Espace Administrateur</a></li>
                     </ul>
                 </div>
                 

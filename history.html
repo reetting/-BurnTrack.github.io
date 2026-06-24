@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Historique des Simulations - BurnTrack</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+            colors: {
+              brand: {
+                red: '#ef4444',
+                dark: '#0a0a0a',
+                gray: '#171717',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body { background-color: #050505; color: #ffffff; overflow-x: hidden; }
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #0a0a0a; }
+      ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #ef4444; }
+    </style>
+</head>
+<body class="selection:bg-red-500 selection:text-white flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="w-full z-50 bg-brand-dark/90 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-2 cursor-pointer group">
+                    <i data-lucide="flame" class="h-8 w-8 text-brand-red group-hover:animate-pulse"></i>
+                    <span class="font-bold text-2xl tracking-tighter text-white">
+                        BURN<span class="text-brand-red">TRACK</span>
+                    </span>
+                </a>
+                
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="index.html" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Accueil</a>
+                    <div class="h-4 w-px bg-gray-700"></div>
+                    <a href="history.html" class="text-red-500 hover:text-red-400 transition-colors text-sm font-medium flex items-center gap-1"><i data-lucide="archive" class="w-4 h-4"></i> Historique</a>
+                    <a href="simulation.html" class="text-gray-300 hover:text-white transition-colors text-sm font-medium flex items-center gap-1"><i data-lucide="activity" class="w-4 h-4"></i> Simulations</a>
+                    <a href="login.html" class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-sm font-bold transition-colors shadow-lg shadow-red-600/20 flex items-center gap-1"><i data-lucide="lock" class="w-4 h-4"></i> Admin</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        <div class="mb-10">
+            <h1 class="text-4xl font-black text-white tracking-tight mb-2">Historique des <span class="text-red-500">Simulations</span></h1>
+            <p class="text-gray-400">Consultez les résultats des simulations de propagation passées (Jumeau Numérique + IA MLP).</p>
+        </div>
+
+        <!-- Simulation List -->
+        <div class="grid gap-6">
+            <!-- Item 1 -->
+            <div class="bg-brand-gray border border-gray-800 rounded-xl p-6 hover:border-gray-600 transition-colors">
+                <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="bg-green-500/10 text-green-400 text-xs font-bold px-2 py-1 rounded border border-green-500/20">Terminée</span>
+                            <h2 class="text-xl font-bold text-white">Forêt de Bouskoura - Secteur Nord</h2>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-4">Date : 18 Juin 2026 • Modèle : AF_MIOMBO • Durée simulée : 4 heures</p>
+                        <div class="flex flex-wrap gap-4 text-sm">
+                            <div class="flex items-center gap-1 text-gray-300"><i data-lucide="wind" class="w-4 h-4 text-blue-400"></i> 15 km/h (Nord-Est)</div>
+                            <div class="flex items-center gap-1 text-gray-300"><i data-lucide="thermometer" class="w-4 h-4 text-yellow-400"></i> 32°C</div>
+                            <div class="flex items-center gap-1 text-gray-300"><i data-lucide="droplets" class="w-4 h-4 text-cyan-400"></i> 30% RH</div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <div class="text-right mb-4">
+                            <p class="text-sm text-gray-400">Surface brûlée (est.)</p>
+                            <p class="text-2xl font-black text-red-500">14.2 ha</p>
+                        </div>
+                        <!-- In a real app, this would open a modal or new page with the map -->
+                        <a href="view_simulation.html" class="px-6 py-2 border border-gray-600 text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center gap-2 text-sm font-medium">
+                            <i data-lucide="eye" class="w-4 h-4"></i> Voir la carte
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="bg-brand-gray border border-gray-800 rounded-xl p-6 hover:border-gray-600 transition-colors">
+                <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="bg-green-500/10 text-green-400 text-xs font-bold px-2 py-1 rounded border border-green-500/20">Terminée</span>
+                            <h2 class="text-xl font-bold text-white">Test Synthétique - Savane Africaine</h2>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-4">Date : 15 Juin 2026 • Modèle : AF_SAHEL_GRASS • Durée simulée : 2 heures</p>
+                        <div class="flex flex-wrap gap-4 text-sm">
+                            <div class="flex items-center gap-1 text-gray-300"><i data-lucide="wind" class="w-4 h-4 text-blue-400"></i> 25 km/h (Sud)</div>
+                            <div class="flex items-center gap-1 text-gray-300"><i data-lucide="thermometer" class="w-4 h-4 text-yellow-400"></i> 38°C</div>
+                            <div class="flex items-center gap-1 text-gray-300"><i data-lucide="droplets" class="w-4 h-4 text-cyan-400"></i> 15% RH</div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <div class="text-right mb-4">
+                            <p class="text-sm text-gray-400">Surface brûlée (est.)</p>
+                            <p class="text-2xl font-black text-red-500">8.5 ha</p>
+                        </div>
+                        <a href="view_simulation.html" class="px-6 py-2 border border-gray-600 text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center gap-2 text-sm font-medium">
+                            <i data-lucide="eye" class="w-4 h-4"></i> Voir la carte
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-gray-900 pt-8 pb-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <p class="text-gray-600 text-xs">© 2025 BurnTrack Project. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
