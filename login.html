@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion Administrateur - BurnTrack</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+            colors: {
+              brand: {
+                red: '#ef4444',
+                dark: '#0a0a0a',
+                gray: '#171717',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body { background-color: #050505; color: #ffffff; overflow-x: hidden; }
+    </style>
+</head>
+<body class="selection:bg-red-500 selection:text-white flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="w-full z-50 bg-brand-dark/90 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-2 cursor-pointer group">
+                    <i data-lucide="flame" class="h-8 w-8 text-brand-red group-hover:animate-pulse"></i>
+                    <span class="font-bold text-2xl tracking-tighter text-white">
+                        BURN<span class="text-brand-red">TRACK</span>
+                    </span>
+                </a>
+                
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="index.html" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Accueil</a>
+                    <a href="history.html" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Simulations</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center p-4 w-full relative">
+        <!-- Decoration -->
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
+
+        <div class="w-full max-w-md bg-brand-gray border border-gray-800 rounded-2xl p-8 shadow-2xl relative z-10">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
+                    <i data-lucide="shield-alert" class="w-8 h-8 text-red-500"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-white">Accès Restreint</h1>
+                <p class="text-gray-400 text-sm mt-2">Identifiez-vous pour paramétrer et lancer de nouvelles simulations BurnTrack.</p>
+            </div>
+
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Identifiant</label>
+                    <input type="text" id="username" placeholder="Entrez votre identifiant" required class="w-full bg-gray-900 border border-gray-700 text-white px-4 py-3 rounded-lg focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Mot de passe</label>
+                    <input type="password" id="password" placeholder="••••••••" required class="w-full bg-gray-900 border border-gray-700 text-white px-4 py-3 rounded-lg focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors" />
+                </div>
+                
+                <div id="errorMessage" class="hidden text-red-500 text-sm text-center font-medium bg-red-500/10 p-3 rounded border border-red-500/20">
+                    Identifiants incorrects.
+                </div>
+
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition-colors shadow-[0_0_20px_rgba(239,68,68,0.3)] flex items-center justify-center gap-2">
+                    <i data-lucide="log-in" class="w-5 h-5"></i> Connexion
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center text-xs text-gray-500 border-t border-gray-800 pt-6">
+                Pour la maquette, utilisez <strong>admin</strong> / <strong>admin</strong>.
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('http://localhost:8765/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('burntrack_token', data.token);
+                    window.location.href = 'dashboard.html';
+                } else {
+                    showError();
+                }
+            } catch (err) {
+                console.error("Erreur de connexion au serveur", err);
+                document.getElementById('errorMessage').innerText = "Impossible de joindre le serveur Backend (vérifiez qu'il est lancé).";
+                showError();
+            }
+
+            function showError() {
+                document.getElementById('errorMessage').classList.remove('hidden');
+                // Shake effect
+                const form = document.querySelector('.bg-brand-gray');
+                form.style.transform = 'translateX(-10px)';
+                setTimeout(() => form.style.transform = 'translateX(10px)', 100);
+                setTimeout(() => form.style.transform = 'translateX(-10px)', 200);
+                setTimeout(() => form.style.transform = 'translateX(0)', 300);
+            }
+        });
+    </script>
+</body>
+</html>

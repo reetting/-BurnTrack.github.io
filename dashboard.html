@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BurnTrack â€” Simulation Publique</title>
+<title>BurnTrack â€” Bouskoura Fire Risk</title>
 <style>
   :root {
     --bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--border:#30363d;
@@ -129,7 +129,7 @@
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
 </head>
 <body>
-<nav style='width:100%; z-index:9999; background:rgba(10,10,10,0.9); border-bottom:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 20px; height:60px; flex-shrink:0;'><div style='display:flex; align-items:center; gap:8px;'><svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='#ef4444' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-eye'><path d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/><circle cx='12' cy='12' r='3'/></svg><span style='font-weight:bold; font-size:20px; color:white; font-family:"Segoe UI",sans-serif;'><a href='index.html' style='text-decoration:none; color:inherit;'>BURN<span style='color:#ef4444;'>TRACK</span></a><span style='color:#888; font-size:14px; margin-left:8px; font-weight:normal;'>Visualisation Publique</span></span></div><div><a href='index.html' style='color:#888; text-decoration:none; font-family:"Segoe UI",sans-serif; font-size:14px; display:flex; align-items:center; gap:6px;'><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-home'><path d='m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/><polyline points='9 22 9 12 15 12 15 22'/></svg> Accueil</a></div></nav>
+<nav style='width:100%; z-index:9999; background:rgba(10,10,10,0.9); border-bottom:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 20px; height:60px; flex-shrink:0;'><div style='display:flex; align-items:center; gap:8px;'><svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='#ef4444' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-shield-alert'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/><path d='M12 8v4'/><path d='M12 16h.01'/></svg><span style='font-weight:bold; font-size:20px; color:white; font-family:"Segoe UI",sans-serif;'><a href='index.html' style='text-decoration:none; color:inherit;'>BURN<span style='color:#ef4444;'>TRACK</span></a><span style='color:#888; font-size:14px; margin-left:8px; font-weight:normal;'>Admin Dashboard</span></span></div><div><a href='index.html' style='color:#888; text-decoration:none; font-family:"Segoe UI",sans-serif; font-size:14px; display:flex; align-items:center; gap:6px;'><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-log-out'><path d='M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4'/><polyline points='16 17 21 12 16 7'/><line x1='21' x2='9' y1='12' y2='12'/></svg> Quitter</a></div></nav>
 <header>
   <span class="logo">&#128293; BURNTRACK</span>
   <span id="badge" class="badge offline">OFFLINE</span>
@@ -170,7 +170,7 @@
       <div style="font-size:11px;color:var(--text2)" id="ignPtsLabel"></div>
     </div>
     <div class="sb-section" id="runSection" style="display:none">
-      <div style="font-size:12px;color:var(--text2);text-align:center;">Mode observateur : lancement de simulations désactivé.</div>
+      <button class="btn-primary" id="btnRun" onclick="runScenarios()">&#9654; LANCER LES SIMULATIONS</button>
     </div>
     <div class="sb-section" id="progressSection">
       <div class="sb-title">Simulations en cours</div>
@@ -242,6 +242,10 @@
 <script>
 const WS_URL = "ws://" + location.hostname + ":8765/ws";
 let ws=null,playing=false,speed=1.0,dt=1.0;
+let authToken = localStorage.getItem("burntrack_token");
+if (!authToken) {
+    window.location.href = "login.html";
+}
 let riskGrid=null,stateGrid=null,ignPts=[],bkMeta=null,scenarios=[],activeScenario=null;
 let burnProbMap=null;  // weighted burn probability from run_scenarios
 const riskCanvas=document.getElementById("riskCanvas");
@@ -258,6 +262,7 @@ function connect(){
     document.getElementById("badge").className="badge online";
     document.getElementById("badge").textContent="ONLINE";
     setStatus("Connecte au serveur BurnTrack");
+    send({ cmd: "auth", token: authToken });
   };
   ws.onclose=function(){
     document.getElementById("badge").className="badge offline";
@@ -276,6 +281,7 @@ function send(obj){if(ws&&ws.readyState===1)ws.send(JSON.stringify(obj));}
 function handleMessage(msg){
   switch(msg.type){
     case "ready": setStatus("Serveur pret - Chargez la foret pour commencer"); break;
+    case "auth_success": setStatus("Authentification réussie en tant qu'administrateur"); break;
     case "status": setStatus(msg.message||msg.msg||""); break;
     case "error":
       setStatus("Erreur: "+(msg.message||msg.msg||""));
@@ -544,6 +550,7 @@ function onScenarioResults(results, fullMsg){
       +"<div style='font-size:10px;color:var(--text2);margin-top:2px;'>Cellule ("+r.row+", "+r.col+") - Score risque: "+Math.round((r.risk_score||0)*100)+"%</div>"
       +"<div class='rc-actions'>"
       +"<button class='btn-watch' onclick='watchScenario("+i+")'>&#9654; Observer le feu</button>"
+      +"<button class='btn-ensemble' onclick='runEnsemble("+i+")'>&#8853; Ensemble</button>"
       +"</div></div>";
   }).join("");
   var top=results[0];
