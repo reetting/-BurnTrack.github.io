@@ -1,130 +1,338 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Connexion Administrateur - BurnTrack</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BurnTrack | Accès Sécurisé</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: { sans: ['Inter', 'sans-serif'] },
-            colors: {
-              brand: {
-                red: '#ef4444',
-                dark: '#0a0a0a',
-                gray: '#171717',
-              }
-            }
-          }
-        }
-      }
-    </script>
     <style>
-      body { background-color: #050505; color: #ffffff; overflow-x: hidden; }
+        :root {
+            --bg-dark: #07090c;
+            --neon-orange: #ff5e00;
+            --neon-red: #ff2a00;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(15, 18, 25, 0.75);
+            --text-main: #f0f4f8;
+            --text-muted: #8b949e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated Background Particles / Glow */
+        .glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,94,0,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            animation: pulse 6s infinite alternate;
+        }
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        }
+
+        /* Login Card */
+        .login-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 420px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            z-index: 1;
+            position: relative;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .card-header i {
+            font-size: 3rem;
+            color: var(--neon-orange);
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px rgba(255,94,0,0.5));
+        }
+        .card-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        .card-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Form Group */
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-group input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem 1rem 1rem 2.8rem;
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            outline: none;
+        }
+        .form-group input:focus {
+            border-color: var(--neon-orange);
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 0 3px rgba(255, 94, 0, 0.15);
+        }
+        .form-group .icon {
+            position: absolute;
+            bottom: 1.1rem;
+            left: 1rem;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+        .form-group input:focus + .icon {
+            color: var(--neon-orange);
+        }
+
+        /* API Settings Collapse */
+        .api-settings {
+            display: none;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            border: 1px dashed var(--glass-border);
+        }
+        .api-settings.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn { from { opacity:0; } to {opacity:1;} }
+        
+        .api-toggle {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            width: 100%;
+            transition: color 0.3s;
+        }
+        .api-toggle:hover { color: #fff; }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
+            color: #fff;
+            border: none;
+            padding: 1.1rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 20px rgba(255,94,0,0.3);
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(255,94,0,0.4);
+        }
+        .btn-submit:active { transform: translateY(1px); }
+
+        /* Status Message */
+        .status {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.8rem;
+            border-radius: 8px;
+            display: none;
+        }
+        .status.error {
+            display: block;
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff4a4a;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        /* Back link */
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+            z-index: 10;
+        }
+        .back-link:hover { color: #fff; }
     </style>
 </head>
-<body class="selection:bg-red-500 selection:text-white flex flex-col min-h-screen">
+<body>
 
-    <!-- Navbar -->
-    <nav class="w-full z-50 bg-brand-dark/90 backdrop-blur-md border-b border-white/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <a href="index.html" class="flex-shrink-0 flex items-center gap-2 cursor-pointer group">
-                    <i data-lucide="flame" class="h-8 w-8 text-brand-red group-hover:animate-pulse"></i>
-                    <span class="font-bold text-2xl tracking-tighter text-white">
-                        BURN<span class="text-brand-red">TRACK</span>
-                    </span>
-                </a>
-                
-                <div class="hidden md:flex space-x-8 items-center">
-                    <a href="index.html" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Accueil</a>
-                    <a href="history.html" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Simulations</a>
-                </div>
-            </div>
+    <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Retour à l'accueil</a>
+    
+    <div class="glow"></div>
+
+    <div class="login-card">
+        <div class="card-header">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h2>BurnTrack Admin</h2>
+            <p>Accès au centre de commandement</p>
         </div>
-    </nav>
 
-    <!-- Main Content -->
-    <main class="flex-grow flex items-center justify-center p-4 w-full relative">
-        <!-- Decoration -->
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-red-600/10 blur-[100px] rounded-full pointer-events-none"></div>
-
-        <div class="w-full max-w-md bg-brand-gray border border-gray-800 rounded-2xl p-8 shadow-2xl relative z-10">
-            <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
-                    <i data-lucide="shield-alert" class="w-8 h-8 text-red-500"></i>
-                </div>
-                <h1 class="text-2xl font-bold text-white">Accès Restreint</h1>
-                <p class="text-gray-400 text-sm mt-2">Identifiez-vous pour paramétrer et lancer de nouvelles simulations BurnTrack.</p>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Nom d'utilisateur</label>
+                <input type="text" id="username" placeholder="admin" required autocomplete="username">
+                <i class="fa-solid fa-user icon"></i>
             </div>
-
-            <form id="loginForm" class="space-y-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-2">Identifiant</label>
-                    <input type="text" id="username" placeholder="Entrez votre identifiant" required class="w-full bg-gray-900 border border-gray-700 text-white px-4 py-3 rounded-lg focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors" />
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-2">Mot de passe</label>
-                    <input type="password" id="password" placeholder="••••••••" required class="w-full bg-gray-900 border border-gray-700 text-white px-4 py-3 rounded-lg focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors" />
-                </div>
-                
-                <div id="errorMessage" class="hidden text-red-500 text-sm text-center font-medium bg-red-500/10 p-3 rounded border border-red-500/20">
-                    Identifiants incorrects.
-                </div>
-
-                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition-colors shadow-[0_0_20px_rgba(239,68,68,0.3)] flex items-center justify-center gap-2">
-                    <i data-lucide="log-in" class="w-5 h-5"></i> Connexion
-                </button>
-            </form>
             
-            <div class="mt-6 text-center text-xs text-gray-500 border-t border-gray-800 pt-6">
-                Pour la maquette, utilisez <strong>admin</strong> / <strong>admin</strong>.
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+                <i class="fa-solid fa-lock icon"></i>
             </div>
-        </div>
-    </main>
+
+            <div class="api-toggle" onclick="toggleApiSettings()">
+                <i class="fa-solid fa-gear"></i> Paramètres du serveur distant
+            </div>
+
+            <div class="api-settings" id="apiSettings">
+                <div class="form-group" style="margin-bottom:0;">
+                    <label>URL de l'API (Backend)</label>
+                    <input type="text" id="apiUrl" value="https://orange-winner-q7pq96vj679w3676-8765.app.github.dev/api/login" style="font-size:0.8rem; padding-left:1rem;">
+                </div>
+                <small style="color:var(--text-muted); font-size:0.75rem; display:block; margin-top:8px;">Modifiez cette URL si votre Codespace change.</small>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <span>Connexion</span>
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            </button>
+
+            <div id="status" class="status"></div>
+        </form>
+    </div>
 
     <script>
-        lucide.createIcons();
+        // Restauration de l'URL personnalisée si elle existe
+        const savedUrl = localStorage.getItem("burntrack_api_url");
+        if(savedUrl) {
+            document.getElementById("apiUrl").value = savedUrl;
+        }
 
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        function toggleApiSettings() {
+            document.getElementById("apiSettings").classList.toggle("active");
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            const apiUrl = document.getElementById('apiUrl').value;
+            const statusEl = document.getElementById('status');
+            const btn = document.getElementById('submitBtn');
+
+            // Sauvegarder l'URL d'API choisie pour le dashboard
+            localStorage.setItem("burntrack_api_url", apiUrl);
             
+            // Calculer l'URL WebSocket à partir de l'URL API
+            // Exemple: https://xxxx-8765.app.github.dev/api/login -> wss://xxxx-8765.app.github.dev/ws
+            let wsUrl = apiUrl.replace("http://", "ws://").replace("https://", "wss://").replace("/api/login", "/ws");
+            localStorage.setItem("burntrack_ws_url", wsUrl);
+
+            statusEl.className = 'status';
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Authentification...';
+            btn.disabled = true;
+
             try {
-                const response = await fetch('https://orange-winner-q7pq96vj679w3676-8765.app.github.dev/api/login', {
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: user, password: pass })
+                    body: JSON.stringify({ username: u, password: p })
                 });
 
                 if (response.ok) {
                     const data = await response.json();
                     localStorage.setItem('burntrack_token', data.token);
-                    window.location.href = 'dashboard.html';
+                    statusEl.className = 'status';
+                    statusEl.style.display = 'block';
+                    statusEl.style.background = 'rgba(0,255,0,0.1)';
+                    statusEl.style.color = '#4ade80';
+                    statusEl.style.borderColor = 'rgba(0,255,0,0.2)';
+                    statusEl.textContent = 'Accès autorisé. Redirection...';
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 800);
                 } else {
-                    showError();
+                    statusEl.textContent = 'Identifiants incorrects';
+                    statusEl.className = 'status error';
+                    btn.innerHTML = '<span>Connexion</span><i class="fa-solid fa-arrow-right-to-bracket"></i>';
+                    btn.disabled = false;
                 }
             } catch (err) {
-                console.error("Erreur de connexion au serveur", err);
-                document.getElementById('errorMessage').innerText = "Impossible de joindre le serveur Backend (vérifiez qu'il est lancé).";
-                showError();
-            }
-
-            function showError() {
-                document.getElementById('errorMessage').classList.remove('hidden');
-                // Shake effect
-                const form = document.querySelector('.bg-brand-gray');
-                form.style.transform = 'translateX(-10px)';
-                setTimeout(() => form.style.transform = 'translateX(10px)', 100);
-                setTimeout(() => form.style.transform = 'translateX(-10px)', 200);
-                setTimeout(() => form.style.transform = 'translateX(0)', 300);
+                console.error(err);
+                statusEl.textContent = 'Impossible de joindre le serveur Backend.';
+                statusEl.className = 'status error';
+                btn.innerHTML = '<span>Connexion</span><i class="fa-solid fa-arrow-right-to-bracket"></i>';
+                btn.disabled = false;
             }
         });
     </script>
