@@ -52,7 +52,11 @@
             align-items: center;
             gap: 10px;
         }
-        .brand-logo i { color: var(--neon-orange); }
+        .brand-logo img {
+            height: 28px;
+            width: auto;
+            filter: drop-shadow(0 0 6px rgba(255,94,0,0.4));
+        }
 
         .btn-outline {
             background: transparent;
@@ -136,7 +140,7 @@
 <body>
 
     <nav>
-        <a href="index.html" class="brand-logo"><i class="fa-solid fa-fire-flame-curved"></i> BurnTrack <span style="font-size:0.8rem; color:var(--text-muted); font-weight:400;">LIVE VIEW</span></a>
+        <a href="index.html" class="brand-logo"><img src="assets/logo.png" alt="BurnTrack"> BurnTrack <span style="font-size:0.8rem; color:var(--text-muted); font-weight:400;">LIVE VIEW</span></a>
         <div style="display:flex; gap:10px; align-items:center;">
             <span id="badge" style="font-size:0.75rem; color:var(--neon-red); font-weight:600;"><i class="fa-solid fa-circle"></i> OFFLINE</span>
             <a href="login.html" class="btn-outline"><i class="fa-solid fa-lock"></i> Admin</a>
@@ -166,7 +170,7 @@
     </div>
 
     <script>
-        const WS_URL = localStorage.getItem("burntrack_ws_url") || "wss://orange-winner-q7pq96vj679w3676-8765.app.github.dev/ws";
+        const WS_URL = localStorage.getItem("burntrack_ws_url") || "ws://localhost:8765/ws";
         let ws = null;
         let riskGrid = null, stateGrid = null, bkMeta = null, isCustomMode = false;
 
@@ -301,5 +305,6 @@
 
         connect();
     </script>
+    <script src="particles.js"></script>
 </body>
 </html>

@@ -85,9 +85,20 @@
             align-items: center;
             gap: 10px;
         }
-        .logo i {
-            color: var(--neon-orange);
-            text-shadow: 0 0 15px var(--neon-orange);
+        .logo img {
+            height: 42px;
+            width: auto;
+            filter: drop-shadow(0 0 8px rgba(255,94,0,0.4));
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        .logo:hover img {
+            transform: scale(1.08);
+            filter: drop-shadow(0 0 14px rgba(255,94,0,0.7));
+        }
+        nav.scrolled {
+            padding: 0.8rem 4rem;
+            background: rgba(7, 9, 12, 0.95);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
         }
 
         .nav-links {
@@ -357,6 +368,50 @@
             mix-blend-mode: lighten;
         }
 
+        /* --- STATS COUNTER SECTION --- */
+        .section-stats {
+            padding: 5rem 4rem;
+            background: linear-gradient(180deg, rgba(255,60,0,0.03) 0%, rgba(0,0,0,0) 100%);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 2rem 1rem;
+            position: relative;
+        }
+        .stat-item::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 20%;
+            height: 60%;
+            width: 1px;
+            background: linear-gradient(180deg, transparent, var(--glass-border), transparent);
+        }
+        .stat-item:last-child::after { display: none; }
+        .stat-number {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--neon-orange), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         /* --- FOOTER --- */
         footer {
             padding: 4rem;
@@ -365,16 +420,38 @@
             background: var(--bg-dark);
         }
         .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
             font-family: 'Outfit', sans-serif;
             font-size: 1.5rem;
             font-weight: 800;
             color: #fff;
             margin-bottom: 1rem;
         }
+        .footer-logo img {
+            height: 36px;
+            width: auto;
+            filter: drop-shadow(0 0 6px rgba(255,94,0,0.3));
+        }
         footer p {
             color: var(--text-muted);
             font-size: 0.9rem;
         }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+        .footer-links a:hover { color: var(--neon-orange); }
 
         /* Animations */
         @keyframes fadeInUp {
@@ -390,7 +467,10 @@
             .hero h1 { font-size: 3.5rem; }
             .detail-row, .detail-row.reverse { flex-direction: column; }
             nav { padding: 1rem 2rem; }
-            .nav-links { display: none; } /* Simplified for mobile */
+            nav.scrolled { padding: 0.6rem 2rem; }
+            .nav-links { display: none; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .stat-item::after { display: none; }
         }
     </style>
 </head>
@@ -399,7 +479,7 @@
     <div class="glow-bg"></div>
 
     <nav>
-        <a href="index.html" class="logo"><i class="fa-solid fa-fire-flame-curved"></i> BurnTrack</a>
+        <a href="index.html" class="logo"><img src="assets/logo.png" alt="BurnTrack Logo"> BurnTrack</a>
         <div class="nav-links">
             <a href="#technologie">Technologie</a>
             <a href="#fonctionnalites">Fonctionnalités</a>
@@ -484,28 +564,111 @@
         </div>
     </section>
 
+    <section class="section-stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number" data-target="13">0</div>
+                <div class="stat-label">Modèles de Combustibles</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="95" data-suffix="%">0</div>
+                <div class="stat-label">Précision IA</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="300" data-suffix="+">0</div>
+                <div class="stat-label">Scénarios Simulés</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="24" data-suffix="/7">0</div>
+                <div class="stat-label">Monitoring Temps Réel</div>
+            </div>
+        </div>
+    </section>
+
     <footer>
-        <div class="footer-logo"><i class="fa-solid fa-fire-flame-curved" style="color:var(--neon-orange);"></i> BurnTrack</div>
+        <div class="footer-logo"><img src="assets/logo.png" alt="BurnTrack"> BurnTrack</div>
         <p>&copy; 2026 BurnTrack Team. Propulsé par l'IA et la science des données.</p>
+        <div class="footer-links">
+            <a href="simulation.html">Simulation</a>
+            <a href="login.html">Admin</a>
+            <a href="#technologie">Technologies</a>
+        </div>
     </footer>
 
-    <!-- Script simple pour animations au défilement -->
+    <!-- Enhanced scroll animations & interactions -->
     <script>
+        // --- Scroll-based navbar ---
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        // --- Intersection Observer for fade-in ---
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
+            entries.forEach((entry, i) => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = 1;
-                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.style.transitionDelay = `${i * 0.1}s`;
+                    entry.target.classList.add('visible');
                 }
             });
         }, { threshold: 0.1 });
 
-        document.querySelectorAll('.feature-card, .detail-row').forEach(el => {
+        document.querySelectorAll('.feature-card, .detail-row, .stat-item').forEach(el => {
             el.style.opacity = 0;
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'all 0.8s ease-out';
+            el.style.transform = 'translateY(40px)';
+            el.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
             observer.observe(el);
         });
+
+        // Add the 'visible' style
+        const style = document.createElement('style');
+        style.textContent = '.visible { opacity: 1 !important; transform: translateY(0) !important; }';
+        document.head.appendChild(style);
+
+        // --- Animated Counters ---
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.dataset.target);
+                    const suffix = el.dataset.suffix || '';
+                    const duration = 2000;
+                    const startTime = performance.now();
+
+                    function updateCounter(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        // Ease out cubic
+                        const eased = 1 - Math.pow(1 - progress, 3);
+                        const current = Math.floor(eased * target);
+                        el.textContent = current + suffix;
+                        if (progress < 1) requestAnimationFrame(updateCounter);
+                    }
+                    requestAnimationFrame(updateCounter);
+                    counterObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-number').forEach(el => counterObserver.observe(el));
+
+        // --- Tilt effect on feature cards ---
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                card.style.transform = `translateY(-10px) perspective(600px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+                card.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+            });
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'none';
+            });
+        });
     </script>
+    <script src="particles.js"></script>
 </body>
 </html>

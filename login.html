@@ -77,11 +77,16 @@
             text-align: center;
             margin-bottom: 2.5rem;
         }
-        .card-header i {
-            font-size: 3rem;
-            color: var(--neon-orange);
+        .card-header .logo-img {
+            height: 80px;
+            width: auto;
             margin-bottom: 1rem;
-            filter: drop-shadow(0 0 10px rgba(255,94,0,0.5));
+            filter: drop-shadow(0 0 15px rgba(255,94,0,0.5));
+            animation: logoFloat 4s ease-in-out infinite;
+        }
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
         }
         .card-header h2 {
             font-family: 'Outfit', sans-serif;
@@ -231,7 +236,7 @@
 
     <div class="login-card">
         <div class="card-header">
-            <i class="fa-solid fa-shield-halved"></i>
+            <img src="assets/logo.png" alt="BurnTrack" class="logo-img">
             <h2>BurnTrack Admin</h2>
             <p>Accès au centre de commandement</p>
         </div>
@@ -256,7 +261,7 @@
             <div class="api-settings" id="apiSettings">
                 <div class="form-group" style="margin-bottom:0;">
                     <label>URL de l'API (Backend)</label>
-                    <input type="text" id="apiUrl" value="https://orange-winner-q7pq96vj679w3676-8765.app.github.dev/api/login" style="font-size:0.8rem; padding-left:1rem;">
+                    <input type="text" id="apiUrl" value="http://localhost:8765/api/login" style="font-size:0.8rem; padding-left:1rem;">
                 </div>
                 <small style="color:var(--text-muted); font-size:0.75rem; display:block; margin-top:8px;">Modifiez cette URL si votre Codespace change.</small>
             </div>
@@ -336,5 +341,6 @@
             }
         });
     </script>
+    <script src="particles.js"></script>
 </body>
 </html>

@@ -65,7 +65,11 @@
             align-items: center;
             gap: 10px;
         }
-        .brand-logo i { color: var(--neon-orange); }
+        .brand-logo img {
+            height: 32px;
+            width: auto;
+            filter: drop-shadow(0 0 6px rgba(255,94,0,0.4));
+        }
 
         .connection-badge {
             font-size: 0.7rem;
@@ -305,13 +309,14 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
         <div class="brand">
-            <a href="index.html" class="brand-logo"><i class="fa-solid fa-fire-flame-curved"></i> BurnTrack</a>
+            <a href="index.html" class="brand-logo"><img src="assets/logo.png" alt="BurnTrack"> BurnTrack</a>
             <span id="badge" class="connection-badge offline">OFFLINE</span>
         </div>
 
         <div class="tabs">
             <div class="tab active" onclick="switchTab('bouskoura')" id="tab-bouskoura">Bouskoura</div>
             <div class="tab" onclick="switchTab('custom')" id="tab-custom">Terrain Perso</div>
+            <div class="tab" onclick="switchTab('admins')" id="tab-admins">Admins</div>
         </div>
 
         <div class="scroll-area">
@@ -387,6 +392,32 @@
                 <button class="btn-outline" id="btn3d" onclick="open3DMap()"><i class="fa-solid fa-cube"></i> Carte de Probabilité 3D</button>
             </div>
 
+            <!-- ADMINS PANEL -->
+            <div id="panel-admins" style="display:none;">
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.5rem;">
+                    Gérez les comptes administrateurs autorisés à piloter la simulation et à configurer le terrain.
+                </p>
+                <div id="adminsList" style="margin-bottom:2rem; display:flex; flex-direction:column; gap:10px;">
+                    <!-- Rempli dynamiquement -->
+                </div>
+                <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border); border-radius:12px; padding:1.2rem;">
+                    <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:1rem;">Créer un compte</h4>
+                    <form id="addAdminForm" onsubmit="addAdmin(event)" style="display:flex; flex-direction:column; gap:10px;">
+                        <div class="form-group" style="margin-bottom:0.5rem;">
+                            <label>Identifiant</label>
+                            <input type="text" id="newAdminUser" class="form-control" placeholder="Nom d'utilisateur" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0.8rem;">
+                            <label>Mot de passe</label>
+                            <input type="password" id="newAdminPass" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn-primary" style="padding:0.8rem;">
+                            <i class="fa-solid fa-user-plus"></i> Ajouter l'admin
+                        </button>
+                    </form>
+                </div>
+            </div>
+
         </div>
 
         <!-- PLAYBACK CONTROLS -->
@@ -443,7 +474,7 @@
 
     <script>
         // --- INITIALIZATION ---
-        const WS_URL = localStorage.getItem("burntrack_ws_url") || "wss://orange-winner-q7pq96vj679w3676-8765.app.github.dev/ws";
+        const WS_URL = localStorage.getItem("burntrack_ws_url") || "ws://localhost:8765/ws";
         const authToken = localStorage.getItem("burntrack_token");
         if (!authToken) window.location.href = "login.html";
 
@@ -463,12 +494,18 @@
         function switchTab(tab) {
             document.getElementById("tab-bouskoura").classList.remove("active");
             document.getElementById("tab-custom").classList.remove("active");
+            document.getElementById("tab-admins").classList.remove("active");
             document.getElementById("panel-bouskoura").style.display = "none";
             document.getElementById("panel-custom").style.display = "none";
+            document.getElementById("panel-admins").style.display = "none";
             
             document.getElementById("tab-" + tab).classList.add("active");
             document.getElementById("panel-" + tab).style.display = "block";
             isCustomMode = (tab === 'custom');
+
+            if (tab === 'admins') {
+                loadAdminsList();
+            }
         }
 
         // --- WEBSOCKET ---
@@ -753,7 +790,89 @@
             drawFireOverlay(); drawIgnitionDots();
         });
 
+        // --- ADMINS MANAGEMENT API CALLS ---
+        async function fetchAdmins(url, options = {}) {
+            const apiBase = (localStorage.getItem("burntrack_api_url") || "http://localhost:8765/api/login").replace("/api/login", "");
+            const token = localStorage.getItem("burntrack_token");
+            const headers = {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json",
+                ...(options.headers || {})
+            };
+            return fetch(apiBase + url, { ...options, headers });
+        }
+
+        async function loadAdminsList() {
+            const listEl = document.getElementById("adminsList");
+            listEl.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:0.85rem;"><i class="fa-solid fa-circle-notch fa-spin"></i> Chargement...</div>`;
+            try {
+                const res = await fetchAdmins("/api/admins");
+                if (res.ok) {
+                    const admins = await res.json();
+                    if (admins.length === 0) {
+                        listEl.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:0.85rem;">Aucun admin trouvé</div>`;
+                        return;
+                    }
+                    listEl.innerHTML = admins.map(user => `
+                        <div style="background:var(--bg-card); border:1px solid var(--border); padding:0.8rem 1rem; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:600; color:#fff;"><i class="fa-solid fa-user-shield" style="color:var(--neon-orange); margin-right:8px;"></i> ${user}</span>
+                            ${user !== 'admin' ? `
+                                <button class="btn-outline" style="width:auto; margin:0; padding:4px 8px; font-size:0.75rem; border-color:rgba(255,42,0,0.3); color:var(--neon-red);" onclick="deleteAdmin('${user}')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            ` : '<span style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase;">Principal</span>'}
+                        </div>
+                    `).join("");
+                } else {
+                    listEl.innerHTML = `<div style="text-align:center; color:var(--neon-red); font-size:0.85rem;">Erreur de chargement des admins</div>`;
+                }
+            } catch (err) {
+                listEl.innerHTML = `<div style="text-align:center; color:var(--neon-red); font-size:0.85rem;">Erreur de connexion avec le serveur</div>`;
+            }
+        }
+
+        async function addAdmin(e) {
+            e.preventDefault();
+            const u = document.getElementById("newAdminUser").value.trim();
+            const p = document.getElementById("newAdminPass").value;
+            if(!u || !p) return;
+            try {
+                const res = await fetchAdmins("/api/admins", {
+                    method: "POST",
+                    body: JSON.stringify({ username: u, password: p })
+                });
+                if (res.ok) {
+                    document.getElementById("newAdminUser").value = "";
+                    document.getElementById("newAdminPass").value = "";
+                    loadAdminsList();
+                } else {
+                    const data = await res.json();
+                    alert("Erreur: " + (data.detail || "Impossible de créer le compte"));
+                }
+            } catch(err) {
+                alert("Erreur de connexion avec le serveur");
+            }
+        }
+
+        async function deleteAdmin(username) {
+            if(!confirm(`Voulez-vous vraiment supprimer l'administrateur "${username}" ?`)) return;
+            try {
+                const res = await fetchAdmins("/api/admins/" + encodeURIComponent(username), {
+                    method: "DELETE"
+                });
+                if (res.ok) {
+                    loadAdminsList();
+                } else {
+                    const data = await res.json();
+                    alert("Erreur: " + (data.detail || "Impossible de supprimer le compte"));
+                }
+            } catch(err) {
+                alert("Erreur de connexion avec le serveur");
+            }
+        }
+
         connect();
     </script>
+    <script src="particles.js"></script>
 </body>
 </html>
