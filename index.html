@@ -57,71 +57,17 @@
             100% { transform: scale(1.1); opacity: 1; }
         }
 
-        /* --- PRELOADER --- */
-        #preloader {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #07090c;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
-        }
-        .preloader-content {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .preloader-logo {
-            height: 150px;
+        /* --- HERO LOGO --- */
+        .hero-logo {
+            height: 220px;
             width: auto;
-            filter: drop-shadow(0 0 30px rgba(255, 94, 0, 0.6));
-            animation: preloaderPulse 2s ease-in-out infinite;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 0 35px rgba(255, 94, 0, 0.5));
+            animation: heroLogoPulse 3s ease-in-out infinite;
         }
-        .preloader-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-top: 1.5rem;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #fff 0%, var(--neon-orange) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .preloader-bar {
-            width: 200px;
-            height: 3px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            margin-top: 1.5rem;
-            overflow: hidden;
-        }
-        .preloader-progress {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--neon-orange), var(--neon-red));
-            animation: progressRun 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        .preloader-subtitle {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 1rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        @keyframes preloaderPulse {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 30px rgba(255, 94, 0, 0.6)); }
-            50% { transform: scale(1.05); filter: drop-shadow(0 0 50px rgba(255, 94, 0, 0.9)); }
-        }
-        @keyframes progressRun {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-        body.loaded #preloader {
-            opacity: 0;
-            visibility: hidden;
+        @keyframes heroLogoPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 35px rgba(255, 94, 0, 0.5)); }
+            50% { transform: scale(1.04); filter: drop-shadow(0 0 55px rgba(255, 94, 0, 0.82)); }
         }
 
         /* --- NAVBAR --- */
@@ -543,18 +489,6 @@
 </head>
 <body>
 
-    <!-- PRELOADER / INTRO SCREEN -->
-    <div id="preloader">
-        <div class="preloader-content">
-            <img src="assets/logo.png" alt="BurnTrack Logo" class="preloader-logo">
-            <h2 class="preloader-title">BurnTrack</h2>
-            <div class="preloader-bar">
-                <div class="preloader-progress"></div>
-            </div>
-            <p class="preloader-subtitle">Initialisation du système de modélisation stochastique...</p>
-        </div>
-    </div>
-
     <div class="glow-bg"></div>
 
     <nav>
@@ -568,6 +502,7 @@
     </nav>
 
     <header class="hero">
+        <img src="assets/logo.png" alt="BurnTrack Logo" class="hero-logo">
         <div class="hero-badge"><i class="fa-solid fa-satellite"></i> Plateforme Nouvelle Génération</div>
         <h1>L'Avenir de la <span>Modélisation</span><br>des Feux de Forêt</h1>
         <p>BurnTrack fusionne la physique de Rothermel, l'Intelligence Artificielle de pointe (MLP/XGBoost) et les données satellitaires NASA FIRMS pour prédire et détecter les incendies avec une précision chirurgicale sur tout type de terrain.</p>
@@ -744,12 +679,6 @@
             card.addEventListener('mouseenter', () => {
                 card.style.transition = 'none';
             });
-        // --- Preloader transition ---
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                document.body.classList.add('loaded');
-            }, 1800);
-        });
     </script>
     <script src="particles.js"></script>
 </body>
