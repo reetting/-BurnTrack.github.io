@@ -10,7 +10,7 @@
     canvas.style.left = '0';
     canvas.style.width = '100vw';
     canvas.style.height = '100vh';
-    canvas.style.zIndex = '-2';
+    canvas.style.zIndex = '-1';
     canvas.style.pointerEvents = 'none';
     canvas.style.display = 'block';
     document.body.appendChild(canvas);
