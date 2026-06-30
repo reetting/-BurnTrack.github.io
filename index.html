@@ -660,7 +660,7 @@
                     counterObserver.unobserve(el);
                 }
             });
-        }, { threshold: 0.5 });
+        }, { threshold: 0.1 });
 
         document.querySelectorAll('.stat-number').forEach(el => counterObserver.observe(el));
 
@@ -679,6 +679,7 @@
             card.addEventListener('mouseenter', () => {
                 card.style.transition = 'none';
             });
+        });
     </script>
     <script src="particles.js"></script>
 </body>
